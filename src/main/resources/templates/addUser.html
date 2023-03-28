@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="ISO-8859-1">
+  <title>Add User</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+  <link rel="stylesheet" th:href="@{/css/addUser.css}" />
+</head>
+<body>
+<div class="center">
+  <main class="form-signin w-auto m-auto">
+    <div class="form-floating">
+      <h1>Add User</h1>
+      <form th:action="@{'/users/submit'}" method="post">
+
+        <div class="mb-2">
+          <label class="form-label required">User Name</label>
+          <input type="text" class="form-control" th:value="${user.user_name}" name="user_name" required>
+        </div>
+        <div class="mb-2">
+          <label class="form-label required">First Name</label>
+          <input type="text" class="form-control" th:value="${user.first_name}"  name="first_name" required>
+        </div>
+        <div class="mb-2">
+          <label class="form-label required">Last Name</label>
+          <input type="text" class="form-control" th:value="${user.last_name}"  name="last_name" required>
+        </div>
+        <div class="mb-2">
+          <label class="form-label required">Email</label>
+          <input type="email" class="form-control" th:value="${user.email}"  name="email" required>
+        </div>
+        <div class="mb-2">
+          <label class="form-label required">Department</label>
+          <input type="text" class="form-control" th:value="${user.department}"  name="department" required>
+        </div>
+        <div class="mb-2">
+          <label class="form-label required">Password</label>
+          <input type="password" class="form-control" th:value="${user.password}"  name="password" required>
+        </div>
+
+        <div class="mb-2">
+          <input type="hidden" class="form-control" value="1"  name="id">
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-outline-info">Add</button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+</body>
+</html>

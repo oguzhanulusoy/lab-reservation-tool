@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Create Reservation</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+    <link rel="stylesheet" th:href="@{/css/createReservation.css}" />
+    
+</head>
+<body>
+    <main class="form-signin w-auto m-auto">
+        <div class="form-floating center">
+            <h1>Create Reservation</h1><br> 
+            <h5>Server Name:</h5>
+            <h2 name="server_name" th:text="${param.server_name}"></h2><br>
+            <form th:action="@{'/reservations/submit'}">
+                <div class="mb-2">
+                    <div class="float-child mb-2">
+                        <label class="required">Start Date</label>
+                        <input type="date" class="form-control" th:value="${reservation.start_date}" name="start_date">
+                    </div>
+                    <div class="mb-2">  
+                        <label class="form-label required">End Date</label>
+                        <input type="date" class="form-control" th:value="${reservation.end_date}" name="end_date">
+                    </div>  
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-outline-info" value="Check Dates" th:data-parameter1="${reservation.start_date}"  th:data-parameter2="${reservation.end_date}"  th:onclick="getDatesInRange(this.getAttribute('data-parameter1'),this.getAttribute('data-parameter2'))" />
+                </div>
+                <div class="mb-2">
+                    <label class="form-label required">Reason</label>
+                    <input type="text" class="form-control" th:value="${reservation.reason}" name="reason">
+                </div>
+                <div class="mb-2">
+                    <!-- <label class="form-label required">Server Id</label> -->
+                    <input readonly type="hidden" class="form-control" th:value="${param.server_id}"  name="server_id">
+                </div>
+                <div class="mb-2">
+                    <!-- <label class="form-label required">User ID</label> -->
+                    <input readonly type="hidden" class="form-control" value="1"  name="user_id">
+                </div>
+                <div class="mb-2">
+                    <!-- <label class="form-label required">Server Status</label> -->
+                    <input type="hidden" class="form-control" value="1"  name="status">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-info"  >Add</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+<script>
+    
+    //I wrote this following script but it isn't working. I wont delete maybe it helps..
+
+    var pg = require('pg');
+    var connectionString = "postgres://postgres:admin@serverName/localhost:5432/deneme";
+    var pgClient = new pg.Client(connectionString);
+    pgClient.connect();
+    var query = pgClient.query("SELECT start_date, end_date FROM reservation");
+
+    query.on("row", function(row,result){
+    result.addRow(row);
+    });
+
+    function getDatesInRange(startDate, endDate) 
+    {
+        document.getElementById("checked").innerHTML = startDate;
+        const date = new Date(startDate.getTime());
+
+        const dates = [];
+
+        while (date <= endDate) 
+        {
+            dates.push(new Date(date));
+            date.setDate(date.getDate() + 1);
+        }
+        //return dates;
+
+        for (let i = 0; i < dates.length; i++) 
+        {
+            checkDate(dates[i])
+        }  
+    }
+
+    function checkDate(date)
+    {
+        document.getElementById("checked").innerHTML = "buraya kod girmedi";
+        
+        if (condition) 
+        {
+            
+        } 
+        else 
+        {
+            
+        }
+    }
+
+</script>
+</html>

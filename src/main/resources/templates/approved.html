@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="refresh" content="3;URL=http://localhost:8080/users"> -->
+    <link rel="stylesheet" th:href="@{/css/approved.css}" />
+    <title>Redirect Page</title>
+</head>
+
+<body onload="waitSec()"></body>
+<h1 align="center">Wow Code Has Worked!</h1>
+</body>
+<script>
+    function waitSec() 
+    {
+        var milliseconds = 2 * 1000;
+        setTimeout(function () 
+        {
+            window.close();
+        }, milliseconds);
+    }
+</script>
+
+</html>

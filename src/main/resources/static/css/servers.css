@@ -1,0 +1,60 @@
+.wrapper 
+{
+    width: 500px;
+    margin: 0 auto;
+}
+
+body 
+{
+    background-color: #171717 !important;
+    color: darkgray !important;
+    margin: 20px;
+}
+
+h1, h2, tr 
+{
+    color: turquoise;
+}
+
+td
+{
+    color: darkgray !important;
+}
+
+a 
+{
+    color: darkgray;
+    text-decoration: none;
+}
+
+.card 
+{
+    --bs-card-bg: #171717 !important;
+}
+
+.table 
+{
+    --bs-table-color: darkgray !important;
+}
+
+.btn-outline-info 
+{
+    --bs-btn-border-color: #40e0d0 !important;
+    --bs-btn-color: darkgray !important;
+    --bs-btn-hover-bg: turquoise !important;
+    --bs-btn-hover-color: #171717 !important;
+}
+
+.float-container 
+{
+    padding-bottom: 40px;
+    padding-top: 10px;
+}
+
+.float-child 
+{
+    width: 50%;
+    float: left;
+    padding-bottom: 40px;
+    padding-top: 10px;
+}  
