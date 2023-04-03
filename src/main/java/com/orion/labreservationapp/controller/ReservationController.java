@@ -5,6 +5,9 @@ import com.orion.labreservationapp.requests.ReservationCreateRequest;
 import com.orion.labreservationapp.requests.ReservationUpdateRequest;
 import com.orion.labreservationapp.responses.ReservationResponse;
 import com.orion.labreservationapp.service.ReservationService;
+
+import lombok.AllArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,13 +15,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/reservations")
+@AllArgsConstructor
 public class ReservationController {
 
     private ReservationService reservationService;
-
-    public ReservationController(ReservationService reservationService){
-        this.reservationService = reservationService;
-    }
 
     //Check this again.
     @GetMapping

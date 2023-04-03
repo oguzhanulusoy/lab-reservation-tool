@@ -7,6 +7,9 @@ import com.orion.labreservationapp.repos.ReservationRepository;
 import com.orion.labreservationapp.requests.ReservationCreateRequest;
 import com.orion.labreservationapp.requests.ReservationUpdateRequest;
 import com.orion.labreservationapp.responses.ReservationResponse;
+
+import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -15,19 +18,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class ReservationService {
 
     private ReservationRepository reservationRepository;
     private UserService userService;
     private ServerService serverService;
-
-    public ReservationService(ReservationRepository reservationRepository,
-                              UserService userService,
-                              ServerService serverService){
-        this.reservationRepository = reservationRepository;
-        this.userService = userService;
-        this.serverService = serverService;
-    }
 
     public List<ReservationResponse> getAllReservations(Optional<Long> userId) {
         List<Reservation> list;
@@ -74,5 +70,7 @@ public class ReservationService {
         reservationRepository.deleteById(reservationId);
     }
 
-
+    public boolean reservationExists(Long serverId) {
+        return reservationRepository.existsByServerId(serverId);
+    }
 }

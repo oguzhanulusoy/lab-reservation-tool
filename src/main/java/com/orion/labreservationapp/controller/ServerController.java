@@ -2,8 +2,10 @@ package com.orion.labreservationapp.controller;
 
 import com.orion.labreservationapp.entity.Server;
 import com.orion.labreservationapp.requests.ServerCreateRequest;
+import com.orion.labreservationapp.responses.ServerDeleteResponse;
 import com.orion.labreservationapp.responses.ServerResponse;
 import com.orion.labreservationapp.service.ServerService;
+import com.orion.labreservationapp.utils.IdWrapper;
 
 import lombok.AllArgsConstructor;
 
@@ -58,9 +60,10 @@ public class ServerController {
     public Server updateOneServer(@PathVariable Long serverId,@RequestBody Server newServer){
         return serverService.updateOneServer(serverId,newServer);
     }
-
-    @DeleteMapping("/{serverId}")
-    public void deleteOneServer(@PathVariable Long serverId){
-        serverService.deleteById(serverId);
+    
+    @DeleteMapping
+    public ResponseEntity<ServerDeleteResponse> deleteServer(@RequestBody IdWrapper ids) {
+        ServerDeleteResponse result = serverService.deleteServersByIds(ids);
+        return ResponseEntity.ok(result);
     }
 }

@@ -82,17 +82,17 @@ function UserCard() {
     //onRowsDelete:()=>{handleDelete()},
   }
   const getData = () => {
-    let serviceCaller = new ServiceCaller();
-    UserService.getUsers(serviceCaller, '', (res) => {
-      console.log(res)
-      setIsLoaded(true);
-      setRows(res);
-    }, (er) => {
-      console.log(er)
-      setIsLoaded(true);
-      setError(er);
-    })
-    //setRefresh(false);
+    // let serviceCaller = new ServiceCaller();
+    // UserService.getUsers(serviceCaller, '', (res) => {
+    //   console.log(res)
+    //   setIsLoaded(true);
+    //   setRows(res);
+    // }, (er) => {
+    //   console.log(er)
+    //   setIsLoaded(true);
+    //   setError(er);
+    // })
+    setIsLoaded(true)
   }
   useEffect(() => {
     getData()
@@ -105,7 +105,7 @@ function UserCard() {
   else {
     return (
       <ThemeProvider theme={getMuiTheme()}>
-        <Button  /*onClick={() => handleButton("newReservation")}*/  variant="outlined" style={{ margin: 8, backgroundColor: "white", color: "red", borderColor: "white", textTransform: 'none' }}><AddCircleOutlineIcon></AddCircleOutlineIcon></Button>
+        {/* <Button onClick={() => handleButton("newReservation")} variant="outlined" style={{ margin: 8, backgroundColor: "white", color: "black", borderColor: "white", textTransform: 'none' }}><AddCircleOutlineIcon></AddCircleOutlineIcon></Button> */}
         <MUIDataTable title="Users" columns={columns} data={rows} options={options} />
       </ThemeProvider>
     )
