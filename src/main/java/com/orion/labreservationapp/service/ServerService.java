@@ -20,7 +20,7 @@ public class ServerService {
         return serverRepository.findAll();
     }
 
-    public Server saveOneUser(Server newServer) {
+    public Server saveOneServer(Server newServer) {
         return serverRepository.save(newServer);
     }
 

@@ -1,14 +1,14 @@
-import {mainUrl} from "store/constant"
-
 class ReservationService {
-  
+    async getReservations(serviceCaller, queryParams) {
+        return await serviceCaller.get("/reservations", queryParams, undefined)
+    }
 /*     addReservation(serviceCaller, requestBody,callback,errorCallBack){
     let headers= { 'Content-Type': 'application/json'};
         serviceCaller.post(mainUrl + "/reservations/add", undefined, headers, requestBody, callback, errorCallBack)
     } */
-    getReservations(serviceCaller, queryParams, callback,errorCallBack){
-        serviceCaller.get(mainUrl+"/reservations", queryParams, undefined  ,  callback, errorCallBack)
-    }
+    // getReservations(serviceCaller, queryParams, callback,errorCallBack){
+    //     serviceCaller.get(mainUrl+"/reservations", queryParams, undefined  ,  callback, errorCallBack)
+    // }
 /*     updateReservation(serviceCaller, requestBody,callback,errorCallBack){
         let headers= { 'Content-Type': 'application/json'};
         serviceCaller.update(mainUrl + "/reservations", undefined, headers, requestBody, callback, errorCallBack)

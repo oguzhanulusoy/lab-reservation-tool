@@ -6,9 +6,8 @@ const icons = { IconDashboard };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
-const dashboard = {
-    id: 'dashboard-group',
-    title: 'Dashboard',
+const reservations = {
+    id: 'reservations-group',
     type: 'group',
     children: [
         {
@@ -18,16 +17,8 @@ const dashboard = {
             url: '/admin/reservations',
             icon: icons.IconDashboard,
             breadcrumbs: false
-        },
-        {
-            id: 'servers',
-            title: 'Servers',
-            type: 'item',
-            url: '/admin/servers',
-            icon: icons.IconDashboard,
-            breadcrumbs: false
         }
     ]
 };
 
-export default dashboard;
+export default reservations;

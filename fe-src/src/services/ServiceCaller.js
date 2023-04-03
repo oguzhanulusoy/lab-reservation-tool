@@ -5,47 +5,47 @@ class ServiceCaller {
         const uuidOptions = {};
 
         this.correlationId = uuidv1(uuidOptions);
-        this.accessToken = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyNiIsImlhdCI6MTY3MjEyNDUwOSwiZXhwIjoxNjcyMTI1MTE0fQ.UYLOSE5q616GKcdhfJL1cAGTt4msUy4v-9uoIYVNryV2JgMF8MjjsAsZTiNyQOyKQlkKi1tZ5M7_BFia7DDiRg";
         this.headers = {
             'X-Correlation-Id': this.correlationId,
-            "Access-Control-Allow-Origin": "*",
-            'Authorization' : this.accessToken
+            'Access-Control-Allow-Origin': '*',
+            'Authorization' : localStorage.getItem("token")
         };
-        this.httpUtil = new HttpUtil();
+    }
+
+    async get(url, queryParams, headers) {
+        if(!headers){
+            headers ={}
+        }
+
+        headers = Object.assign(headers, this.headers)
+        return await HttpUtil.get(url, queryParams, headers);
+    }
+
+    async post(url, queryParams, headers, requestBody) {
+        if(!headers){
+            headers ={}
+        }
         
-
+        headers = Object.assign(headers, this.headers)
+        return await HttpUtil.post(url, queryParams, headers, requestBody);
     }
 
-    get(url, queryParams, headers, callback, errorCallBack) {
+    async delete(url, queryParams, headers, requestBody) {
         if(!headers){
             headers ={}
         }
+
         headers = Object.assign(headers, this.headers)
-        this.httpUtil.get(url, queryParams, headers, callback, errorCallBack);
+        return await HttpUtil.delete(url, queryParams, headers, requestBody);
     }
 
-    delete(url, queryParams, headers, requestBody, callback, errorCallBack) {
+    async update(url, queryParams, headers, requestBody) {
         if(!headers){
             headers ={}
         }
-        headers = Object.assign(headers, this.headers)
-        this.httpUtil.delete(url, queryParams, headers, requestBody, callback, errorCallBack);
-    }
 
-    post(url, queryParams, headers, requestBody, callback, errorCallBack) {
-        if(!headers){
-            headers ={}
-        }
         headers = Object.assign(headers, this.headers)
-        this.httpUtil.post(url, queryParams, headers, requestBody, callback, errorCallBack);
-    }
-
-    update(url, queryParams, headers, requestBody, callback, errorCallBack) {
-        if(!headers){
-            headers ={}
-        }
-        headers = Object.assign(headers, this.headers)
-        this.httpUtil.update(url, queryParams, headers, requestBody, callback, errorCallBack);
+        return await HttpUtil.update(url, queryParams, headers, requestBody);
     }
 }
 

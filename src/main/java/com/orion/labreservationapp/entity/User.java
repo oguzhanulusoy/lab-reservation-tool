@@ -11,12 +11,12 @@ import javax.persistence.*;
 @Data
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     String firstName;
     String lastName;
-    String userName;
+    String username;
     String email;
     String password;
 
@@ -24,5 +24,4 @@ public class User {
     @JoinColumn(name = "role_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     Role roleId;
-
 }

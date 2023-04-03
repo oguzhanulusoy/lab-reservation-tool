@@ -18,20 +18,19 @@ import {
 } from '@mui/material';
 
 // third party
-import * as Yup from 'yup';
+import { toast } from 'react-toastify';
 import { Formik } from 'formik';
 
 // project imports
 import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-//auth
-import { ReservationWithoutAuth } from 'services/HttpService';
 
-// ============================|| FIREBASE - LOGIN ||============================ //
+import AuthService from 'services/auth/AuthService';
+import ServiceCaller from 'services/ServiceCaller';
 
 const Login = ({ ...others }) => {
     let navigate = useNavigate();
@@ -39,97 +38,81 @@ const Login = ({ ...others }) => {
     const scriptedRef = useScriptRef();
     const [checked, setChecked] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
-    const [store, setStore] = useState({
-        tokenKey: "",
-        currentUser: "",
-        refreshToken: "",
-        roleName: "",
-      });
+    // const [store, setStore] = useState({
+    //     tokenKey: '',
+    //     currentUser: '',
+    //     refreshToken: '',
+    //     roleName: ''
+    // });
+
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
 
-    const handleMouseDownPassword = (event) => {
+    const handleMouseHidePassword = (event) => {
         event.preventDefault();
     };
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const handleEmail = (value) => {
-        setEmail(value)
-    } 
+
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    
+    const handleUsername = (value) => {
+        setUsername(value);
+    };
 
     const handlePassword = (value) => {
-        setPassword(value)
-    } 
-
-    const sendRequest = (path) => {
-        ReservationWithoutAuth(("/auth/"+path), {
-            email  : email , 
-            password : password,
-          })
-          .then((res) => res.json())
-          .then((result) => {localStorage.setItem("tokenKey",result.accessToken);
-                            // localStorage.setItem("refreshKey",result.refreshToken);
-                            localStorage.setItem("currentUser",result.userId);
-                            // localStorage.setItem("currentUserRole",result.roleName);
-                            localStorage.setItem("email",email)
-                            setStore({roleName: result.roleName,});
-                        })
-          .catch((err) => console.log(err))
-    }
-    const handleButton = (path) => {
-        sendRequest(path);
-        setEmail("");
-        setPassword("");
-        console.log(localStorage);
-        // localStorage.getItem("currentUserRole") === "EMPLOYEE" ? navigate('/users') : navigate('/admin/servers')
-        navigate("/admin/reservations");
+        setPassword(value);
     };
+
+    const loginRequest = async () => {
+        const serviceCaller = new ServiceCaller();
+        let requestBody = {
+            username: username,
+            password: password
+        }
+
+        return await AuthService.UserLogin(serviceCaller, requestBody);
+    }
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        loginRequest().then((result) => {
+            if (result.status === 200) {
+                localStorage.setItem('token', result.data.token);
+                sessionStorage.setItem('userId', result.data.userId);
+                sessionStorage.setItem('role', result.data.role);
+                toast.success('Login Success', { autoClose: 1000 });
+                const route = sessionStorage.getItem('role') === "USER" ? '/user' : '/admin';
+                navigate(`${route}/reservations`, { replace: true });
+            } else {
+                toast.error('Login Failed', { autoClose: 1000 });
+            }
+        }).catch((err) => {
+            toast.error('Login Failed', { autoClose: 1000 });
+            console.log(err)
+        });
+    }
+
     return (
         <>
-            <Formik
-                initialValues={{
-                    email: '',
-                    password: '',
-                    submit: null
-                }}
-                validationSchema={Yup.object().shape({
-                    //email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-                    //password: Yup.string().max(255).required('Password is required')
-                })}
-                onSubmit={async ({ setErrors, setStatus, setSubmitting }) => {
-                    try {
-                        if (scriptedRef.current) {
-                            setStatus({ success: true });
-                            setSubmitting(false);
-                        }
-                    } catch (err) {
-                        console.error(err);
-                        if (scriptedRef.current) {
-                            setStatus({ success: false });
-                            setErrors({ submit: err.message });
-                            setSubmitting(false);
-                        }
-                    }
-                }}
-            >
+            <Formik>
                 {({ errors, handleBlur, handleSubmit, isSubmitting, touched }) => (
                     <form noValidate onSubmit={handleSubmit} {...others}>
-                        <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
-                            <InputLabel htmlFor="outlined-adornment-email-login">Email Address</InputLabel>
+                        <FormControl fullWidth error={Boolean(touched.username && errors.username)} sx={{ ...theme.typography.customInput }}>
+                            <InputLabel htmlFor="outlined-adornment-username-login">Username</InputLabel>
                             <OutlinedInput
-                                id="outlined-adornment-email-login"
-                                type="email"
-                                value={email}
-                                name="email"
+                                id="outlined-adornment-username-login"
+                                type="text"
+                                value={username}
+                                name="username"
                                 onBlur={handleBlur}
-                                onChange={(i) => handleEmail(i.target.value)}
-                                label="Email Address"
+                                onChange={(i) => handleUsername(i.target.value)}
+                                label="Username"
                                 inputProps={{}}
                             />
-                            {touched.email && errors.email && (
-                                <FormHelperText error id="standard-weight-helper-text-email-login">
-                                    {errors.email}
+                            {touched.username && errors.username && (
+                                <FormHelperText error id="standard-weight-helper-text-username-login">
+                                    {errors.username}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -152,7 +135,7 @@ const Login = ({ ...others }) => {
                                         <IconButton
                                             aria-label="toggle password visibility"
                                             onClick={handleClickShowPassword}
-                                            onMouseDown={handleMouseDownPassword}
+                                            onMouseDown={handleMouseHidePassword}
                                             edge="end"
                                             size="large"
                                         >
@@ -169,6 +152,7 @@ const Login = ({ ...others }) => {
                                 </FormHelperText>
                             )}
                         </FormControl>
+
                         <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
                             <FormControlLabel
                                 control={
@@ -201,8 +185,8 @@ const Login = ({ ...others }) => {
                                     type="submit"
                                     variant="contained"
                                     color="secondary"
-                                    style={{backgroundColor:"#6F6E6E"}}
-                                    onClick={() => handleButton('login')}
+                                    style={{ backgroundColor: '#6F6E6E' }}
+                                    onClick={(e) => handleLogin(e)}
                                 >
                                     Sign in
                                 </Button>

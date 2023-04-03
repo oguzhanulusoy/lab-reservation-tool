@@ -1,20 +1,13 @@
-package com.orion.labreservationapp.entity;
+package com.orion.labreservationapp.responses;
 
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.*;
-
 @Data
-@Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "servers")
-public class Server {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
+public class ServerResponse {
+    Long Id;
     String serverName;
     String serverLocation;
     String serverIp;

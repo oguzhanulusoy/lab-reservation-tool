@@ -1,12 +1,10 @@
-import dashboard from './dashboard';
-import pages from './pages';
+import reservations from './reservations';
+import servers from './servers';
 import user from './user';
 import newReservation from './newReservation';
 
-// ==============================|| MENU ITEMS ||============================== //
-
 const menuItems = {
-    items: [dashboard, user, newReservation, pages]
+    items: [reservations, servers, user, newReservation]
 };
 
 export default menuItems;

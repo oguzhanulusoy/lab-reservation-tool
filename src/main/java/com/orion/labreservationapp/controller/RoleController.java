@@ -1,7 +1,6 @@
 package com.orion.labreservationapp.controller;
 
 import com.orion.labreservationapp.entity.Role;
-import com.orion.labreservationapp.entity.Server;
 import com.orion.labreservationapp.service.RoleService;
 import org.springframework.web.bind.annotation.*;
 

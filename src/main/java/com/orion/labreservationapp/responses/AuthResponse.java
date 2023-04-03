@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class AuthResponse {
-    String message;
+    String token;
     Long userId;
+    String role;
+    String message;
 }

@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 
-// material-ui
 import { Grid } from '@mui/material';
 
-// project imports
 import { gridSpacing } from 'store/constant';
-import UserServer from './UserServer';
+import ReservationSettings from './ReservationSettings';
 
-const Dashboard2 = () => {
+const Reservations = () => {
     const [isLoading, setLoading] = useState(true);
     useEffect(() => {
         setLoading(false);
@@ -16,10 +14,10 @@ const Dashboard2 = () => {
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
-                <UserServer isLoading={isLoading} />
+                <ReservationSettings isLoading={isLoading} />
             </Grid>
         </Grid>
     );
 };
 
-export default Dashboard2;
+export default Reservations;

@@ -6,8 +6,8 @@ import AdminLayout from 'layout/AdminLayout';
 
 // login option 3 routing
 // dashboard routing
-const Dashboard = Loadable(lazy(() => import('views/admin/dashboard')));
-const Dashboard2 = Loadable(lazy(() => import('views/admin/dashboard2')));
+const Reservations = Loadable(lazy(() => import('views/admin/reservations')));
+const Servers = Loadable(lazy(() => import('views/admin/servers')));
 const UsersPage = Loadable(lazy(() => import('views/admin/users')));
 const NewReservationPage = Loadable(lazy(() => import('views/admin/newReservationPage')));
 
@@ -19,11 +19,11 @@ const AuthenticationRoutes = {
     children: [
         {
             path: '/admin/reservations',
-            element: <Dashboard />
+            element: <Reservations />
         },
         {
             path: '/admin/servers',
-            element: <Dashboard2 />
+            element: <Servers />
         },
         {
             path: '/admin/users',

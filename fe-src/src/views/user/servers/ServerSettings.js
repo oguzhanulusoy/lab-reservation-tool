@@ -15,8 +15,9 @@ import Typography from '@mui/material/Typography';
 import UserService from 'services/users/UserService';
 import ServiceCaller from 'services/ServiceCaller';
 import ReservationService from "services/reservation/ReservationService";
+import ServerService from "services/servers/ServerService";
 
-function UserReservation() {
+function ServerSettings() {
     const [rows, setRows] = useState([]);
     const [isLoaded, setIsLoaded]= useState(false);
     const [error, setError] = useState(null);
@@ -25,28 +26,12 @@ function UserReservation() {
         overrides: {
           MuiChip: {
             root: {
-              backgroundColor: "grey"
+              backgroundColor: "black"
             }
           }
         }
       });
     const columns = [
-        {
-            name: "firstName",
-            label: "First Name",
-            options: {
-              filter: true,
-              sort: true
-            }
-        },
-        {
-            name: "lastName",
-            label: "Last Name",
-            options: {
-              filter: true,
-              sort: true
-            }
-        },
         {
             name: "serverName",
             label: "Server Name",
@@ -56,16 +41,32 @@ function UserReservation() {
             }
         },
         {
-            name: "reservationStartDate",
-            label: "Reservation Start Date",
+            name: "serverLocation",
+            label: "Server Location",
             options: {
               filter: true,
               sort: true
             }
         },
         {
-            name: "reservationEndDate",
-            label: "Reservation End Date",
+            name: "serverIp",
+            label: "Server IP",
+            options: {
+              filter: true,
+              sort: true
+            }
+        },
+        {
+            name: "serialNumber",
+            label: "Serial Number",
+            options: {
+              filter: true,
+              sort: true
+            }
+        },
+        {
+            name: "serverType",
+            label: "Server Type",
             options: {
               filter: true,
               sort: true
@@ -99,7 +100,7 @@ function UserReservation() {
     }
     const getData = () => {
         let serviceCaller = new ServiceCaller();
-        ReservationService.getReservations(serviceCaller, '', (res) => {
+        ServerService.getServers(serviceCaller, '', (res) => {
             setIsLoaded(true);
             setRows(res);
         }, (error) => {
@@ -120,10 +121,10 @@ function UserReservation() {
     return (
         <ThemeProvider theme={getMuiTheme()}>
             <Button /* onClick={handleCreateOpen} */ variant="outlined" style={{margin:8, backgroundColor:"white", color:"black", borderColor:"white", textTransform: 'none'}}><AddCircleOutlineIcon></AddCircleOutlineIcon></Button>
-            <MUIDataTable title="Reservations" columns={columns} data={rows} options={options} />
+            <MUIDataTable title="Servers" columns={columns} data={rows} options={options} />
         </ThemeProvider>
   )}
 }
 
-export default UserReservation;
+export default ServerSettings;
   

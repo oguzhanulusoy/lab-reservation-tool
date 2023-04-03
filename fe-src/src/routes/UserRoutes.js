@@ -4,12 +4,8 @@ import { lazy } from 'react';
 import UserLayout from 'layout/UserLayout';
 import Loadable from 'ui-component/Loadable';
 
-// sample page routing
-const SamplePage = Loadable(lazy(() => import('views/user/sample-page')));
-const SamplePage2 = Loadable(lazy(() => import('views/user/sample-page2')));
-
-const Dashboard = Loadable(lazy(() => import('views/user/dashboard')));
-const Dashboard2 = Loadable(lazy(() => import('views/user/dashboard2')));
+const Reservations = Loadable(lazy(() => import('views/user/reservations')));
+const Servers = Loadable(lazy(() => import('views/user/servers')));
 const NewReservationPage = Loadable(lazy(() => import('views/user/newReservationPage')));
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -18,20 +14,12 @@ const MainRoutes = {
     element: <UserLayout />,
     children: [
         {
-            path: 'sample-page',
-            element: <SamplePage />
-        },
-        {
-            path: 'sample-page2',
-            element: <SamplePage2 />
-        },
-        {
             path: '/user/reservations',
-            element: <Dashboard />
+            element: <Reservations />
         },
         {
             path: '/user/servers',
-            element: <Dashboard2 />
+            element: <Servers />
         },
         {
             path: '/user/newReservation',

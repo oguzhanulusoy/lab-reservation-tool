@@ -1,7 +1,6 @@
 package com.orion.labreservationapp.controller;
 
 import com.orion.labreservationapp.entity.Reservation;
-import com.orion.labreservationapp.entity.User;
 import com.orion.labreservationapp.requests.ReservationCreateRequest;
 import com.orion.labreservationapp.requests.ReservationUpdateRequest;
 import com.orion.labreservationapp.responses.ReservationResponse;

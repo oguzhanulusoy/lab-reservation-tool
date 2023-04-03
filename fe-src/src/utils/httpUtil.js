@@ -1,80 +1,115 @@
 class HttpUtil {
-    get = function(url, queryParams,headers, callback, errorCallBack){
-        let completeUrl = url + this.getQueryString(queryParams)
-        const requestOptions = {
-            method: 'GET',
-            headers: headers
+    static get(url, params, headers) {
+        return new Promise((resolve, reject) => {
+            const completeUrl = url + HttpUtil.getQueryString(params)
+            const requestOptions = {
+                method: 'GET',
+                headers: headers
             };
-        fetch(completeUrl, requestOptions)
-        .then(response => {
-            if(response.status === 401 && window.location.pathname !== "/redirect" && window.location.pathname !== "/login"){
-                window.location.assign(window.location.origin + "/orion");
-            }
-            return response.json();
-        })
-        .then(data => callback(data))
-        .catch((err) => {
-            errorCallBack(err)
-        })
+
+            fetch(completeUrl, requestOptions)
+            .then(async response => {
+                if(response.status === 401 && window.location.pathname !== "/orion" && window.location.pathname !== "/login"){
+                    window.location.assign(window.location.origin + "/orion");
+                }
+
+                const statusCode = response.status;
+                const data = await response.json();
+
+                return resolve({data: data, status: statusCode});
+            })
+            .then(data => {
+                return resolve(data)
+            })
+            .catch((err) => {
+                return reject(err);
+            })
+        });
     }
     
-    delete = function(url, queryParams,headers, requestBody, callback, errorCallBack){
-        let completeUrl = url + this.getQueryString(queryParams)
-        const requestOptions = {
-            method: 'DELETE',
-            headers: headers,
-            body: requestBody
+    static post(url, params, headers, requestBody) {
+        return new Promise((resolve, reject) => {
+            let completeUrl = url + HttpUtil.getQueryString(params)
+            const requestOptions = {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(requestBody),
             };
-        fetch(completeUrl, requestOptions)
-        .then(response => {
-            if(response.status === 401 && window.location.pathname !== "/redirect" && window.location.pathname !== "/login"){
-                window.location.assign(window.location.origin + "/redirect");
-            }
-            return response.json()
-        })
-        .then(data => callback(data))
-        .catch((err) => errorCallBack(err))
-    }
 
-    post =  function(url, queryParams, headers, requestBody, callback, errorCallBack){
-        const requestOptions = {
-            method: 'POST',
-            headers: headers,
-            body: requestBody,
-            };
-        let completeUrl = url + this.getQueryString(queryParams)
-        fetch(completeUrl, requestOptions)
-            .then(response => {
-                if(response.status === 401 && window.location.pathname !== "/redirect" && window.location.pathname !== "/login"){
-                    window.location.assign(window.location.origin + "/redirect");
+            fetch(completeUrl, requestOptions)
+            .then(async response => {
+                if(response.status === 401 && window.location.pathname !== "/orion" && window.location.pathname !== "/login"){
+                    window.location.assign(window.location.origin + "/orion");
                 }
-                return response.json()
+
+                const statusCode = response.status;
+                const data = await response.json();
+
+                return resolve({data: data, status: statusCode});
             })
-            .then(data => callback(data))
-            .catch((err) =>{ errorCallBack(err);
-            });
+            .then(data => {
+                return resolve(data)
+            })
+            .catch((err) => {
+                return reject(err);
+            })
+        });
     }
 
-    update =  function(url, queryParams, headers, requestBody, callback, errorCallBack){
-        const requestOptions = {
-            method: 'PUT',
-            headers: headers,
-            body: requestBody,
+    static update(url, params, headers, requestBody) {
+        return new Promise((resolve, reject) => {
+            let completeUrl = url + HttpUtil.getQueryString(params)
+            const requestOptions = {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(requestBody),
             };
-        let completeUrl = url + this.getQueryString(queryParams)
-        fetch(completeUrl, requestOptions)
-            .then(response => {
-                if(response.status === 401 && window.location.pathname !== "/redirect" && window.location.pathname !== "/login"){
-                    window.location.assign(window.location.origin + "/redirect");
+
+            fetch(completeUrl, requestOptions)
+            .then(async response => {
+                if(response.status === 401 && window.location.pathname !== "/orion" && window.location.pathname !== "/login"){
+                    window.location.assign(window.location.origin + "/orion");
                 }
-                return response.json()
+
+                const statusCode = response.status;
+                const data = await response.json();
+
+                return resolve({data: data, status: statusCode});
             })
-            .then(data => callback(data))
-            .catch((err) =>{ errorCallBack(err);
-            });
+            .then(data => {
+                return resolve(data)
+            })
+            .catch((err) => {
+                return reject(err);
+            })
+        });
     }
 
-        getQueryString = function(queryParams) {
+    static delete(url, params, headers, requestBody) {
+        return new Promise((resolve, reject) => {
+            let completeUrl = url + HttpUtil.getQueryString(params)
+            const requestOptions = {
+                method: 'DELETE',
+                headers: headers,
+                body: JSON.stringify(requestBody)
+            };
+
+            fetch(completeUrl, requestOptions)
+            .then(response => {
+                if(response.status === 401 && window.location.pathname !== "/orion" && window.location.pathname !== "/login"){
+                    window.location.assign(window.location.origin + "/orion");
+                }
+
+                return resolve(response);
+            })
+            .then(data => resolve(data))
+            .catch((err) => {
+                return reject(err);
+            })
+        });
+    }
+
+    static getQueryString(queryParams) {
         let queryString = '';
         for(let param in queryParams){
             if(queryString === ''){
@@ -87,8 +122,6 @@ class HttpUtil {
 
         return queryString;
     }
-
-    
 }
 
 export default HttpUtil;

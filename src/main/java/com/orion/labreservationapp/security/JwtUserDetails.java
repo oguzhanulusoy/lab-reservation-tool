@@ -21,7 +21,7 @@ public class JwtUserDetails implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
     private JwtUserDetails(Long id,String username,String password,
-                           Collection<? extends GrantedAuthority> authorities) {
+                        Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -31,7 +31,7 @@ public class JwtUserDetails implements UserDetails {
     public static JwtUserDetails create(User user) {
         List<GrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority("user"));
-        return new JwtUserDetails(user.getId(), user.getUserName(), user.getPassword(),authorityList);
+        return new JwtUserDetails(user.getId(), user.getUsername(), user.getPassword(),authorityList);
     }
     @Override
     public boolean isAccountNonExpired() {
