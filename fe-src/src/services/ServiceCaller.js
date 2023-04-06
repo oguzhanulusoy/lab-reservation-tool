@@ -7,7 +7,7 @@ class ServiceCaller {
         this.correlationId = uuidv1(uuidOptions);
         this.headers = {
             'X-Correlation-Id': this.correlationId,
-            'Access-Control-Allow-Origin': '*',
+            // 'Access-Control-Allow-Origin': '*',
             'Authorization' : localStorage.getItem("token")
         };
     }

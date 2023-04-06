@@ -1,17 +1,12 @@
-import {mainUrl} from "store/constant"
-
 class UserService {
-    getUsers(serviceCaller, queryParams, callback,errorCallBack){
-        serviceCaller.get(mainUrl+"/users", queryParams, undefined  ,  callback, errorCallBack)
+    async getUsers(serviceCaller, queryParams) {
+        return await serviceCaller.get("/user", queryParams, undefined);
     }
-/*     updateUser(serviceCaller, requestBody,callback,errorCallBack){
-        let headers= { 'Content-Type': 'application/json'};
-        serviceCaller.update(mainUrl + "/users", undefined, headers, requestBody, callback, errorCallBack)
-    }*/
-    /*deleteUser(serviceCaller, requestBody, callback,errorCallBack){
-        let headers = {'Accept': 'application/json','Content-Type': 'application/json'};
-        serviceCaller.delete(mainUrl + "/users", undefined, headers  , requestBody, callback, errorCallBack)
-    } */
+
+    async updateUser(serviceCaller, requestBody, userId) {
+        const headers = { 'Content-Type': 'application/json' }
+        return await serviceCaller.update(`/user/${userId}`, undefined, headers, requestBody)
+    }
 }
 
 export default new UserService();

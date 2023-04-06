@@ -2,7 +2,6 @@ import {useParams} from "react-router-dom";
 import {React, useState, useEffect} from "react";
 import UserActivity from "../UserActivity/UserActivity";
 import { makeStyles } from '@material-ui/core/styles';
-import { GetWithAuth } from "../../services/HttpService";
 
 const useStyles = makeStyles({
     root: {

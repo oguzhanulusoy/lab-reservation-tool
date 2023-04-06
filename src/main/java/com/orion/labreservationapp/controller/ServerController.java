@@ -20,6 +20,7 @@ import java.util.List;
 @RequestMapping("/servers")
 @AllArgsConstructor
 public class ServerController {
+    
     private ServerService serverService;
 
     @GetMapping

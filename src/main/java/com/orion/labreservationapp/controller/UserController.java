@@ -1,22 +1,24 @@
 package com.orion.labreservationapp.controller;
 
 import com.orion.labreservationapp.entity.User;
+import com.orion.labreservationapp.requests.UpdateUserDetailsRequest;
 import com.orion.labreservationapp.service.UserService;
+
+import lombok.AllArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
+@AllArgsConstructor
 public class UserController {
+    
     private UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @GetMapping
-    public List<User> getAllUsers(){
+    public List<User> getAllUser(){
         return userService.getAllUsers();
     }
 
@@ -32,7 +34,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public User updateOneUser(@PathVariable Long userId,@RequestBody User newUser){
+    public User updateOneUser(@PathVariable Long userId, @RequestBody UpdateUserDetailsRequest newUser){
         return userService.updateOneUser(userId,newUser);
     }
 

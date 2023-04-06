@@ -1,21 +1,23 @@
 package com.orion.labreservationapp.service;
 
+import com.orion.labreservationapp.entity.Role;
 import com.orion.labreservationapp.entity.User;
 import com.orion.labreservationapp.repos.UserRepository;
+import com.orion.labreservationapp.requests.UpdateUserDetailsRequest;
+
+import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
     UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
+    RoleService roleService;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -29,7 +31,7 @@ public class UserService {
         return userRepository.findById(userId).orElse(null);
     }
 
-    public User updateOneUser(Long userId, User newUser) {
+    public User updateOneUser(Long userId, UpdateUserDetailsRequest newUser) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent())
         {
@@ -37,7 +39,8 @@ public class UserService {
             foundUser.setFirstName(newUser.getFirstName());
             foundUser.setLastName(newUser.getLastName());
             foundUser.setEmail(newUser.getEmail());
-            foundUser.setPassword(newUser.getPassword());
+            Role newRole = roleService.getOneRoleById(newUser.getRoleId());
+            foundUser.setRoleId(newRole);
             userRepository.save(foundUser);
             return foundUser;
         }

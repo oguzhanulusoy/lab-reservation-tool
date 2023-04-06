@@ -4,7 +4,7 @@ import { gridSpacing } from 'store/constant';
 
 import ServerSettings from './ServerSettings';
 
-const Dashboard2 = () => {
+const Servers = () => {
     const [isLoading, setLoading] = useState(true);
     useEffect(() => {
         setLoading(false);
@@ -19,4 +19,4 @@ const Dashboard2 = () => {
     );
 };
 
-export default Dashboard2;
+export default Servers;
