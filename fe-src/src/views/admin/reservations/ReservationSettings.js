@@ -1,78 +1,310 @@
-import MUIDataTable from "mui-datatables";
-import { createTheme } from "@mui/material";
-import { ThemeProvider } from "@mui/material";
-import { Button } from "@mui/material";
-import { useState, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import MUIDataTable from 'mui-datatables';
+import {
+    createTheme,
+    ThemeProvider,
+    Modal,
+    Box,
+    Button,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Card,
+    CardHeader,
+    CardContent,
+    CardActions,
+    TextField,
+    Typography
+} from '@mui/material';
+
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
+
+import { useState, useEffect } from 'react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ServiceCaller from 'services/ServiceCaller';
-import ReservationService from "services/reservation/ReservationService";
-import AdminReservationsConfig from "configs/admin/adminReservationsConfig.js";
+import ReservationService from 'services/reservation/ReservationService';
+import ServerService from 'services/servers/ServerService';
+import AdminReservationsConfig from 'configs/admin/adminReservationsConfig.js';
+import { toast } from 'react-toastify';
 
 function ReservationSettings() {
-  const [rows, setRows] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState(null);
-
-  const handleButton = (path) => {
-    sendRequest(path)
-    navigate("/newReservation")
-  }
-  
-  const getMuiTheme = () =>
-    createTheme({
-      overrides: {
-        MuiChip: {
-          root: {
-            backgroundColor: "grey"
-          }
-        }
-      }
+    const date = new Date();
+    const [rows, setRows] = useState([]);
+    const [selectedIdList, setSelectedIdList] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [error, setError] = useState(null);
+    const [createOpen, setCreateOpen] = useState(false);
+    const [servers, setServers] = useState([]);
+    const [reservation, setReservation] = useState({
+        userId: '',
+        serverId: '',
+        reservationStartDate: dayjs(date.getTime()),
+        reservationEndDate: dayjs(date.getTime() + 86400000)
     });
 
-  const columns = AdminReservationsConfig.AdminReservationColumns;
+    const onInputChange = (e) => {
+        setReservation({ ...reservation, [e.target.name]: e.target.value });
+    };
 
-  const options = {
-    filterType: 'checkbox',
-    onRowSelectionChange: (currentSelect, allSelected) => {
-      const result = allSelected.map(item => { return rows.at(item.index) });
-      const selectedIds = result.map(item => {
-        return item.id;
-      });
-      console.log(selectedIds);
-    },
-    //onRowsDelete:()=>{handleDelete()},
-  }
+    const handleCreateOpen = () => {
+        setCreateOpen(true);
+    };
 
-  const getData = () => {
-    let serviceCaller = new ServiceCaller();
-    ReservationService.getReservations(serviceCaller, '').then((res) => {
-      console.log(res)
-      setIsLoaded(true);
-      setRows(res.data);
-    }).catch((error) => {
-      console.log(error)
-      setIsLoaded(true);
-      setError(error);
-    })
-  }
+    const handleCreateClose = () => {
+        setCreateOpen(false);
+        setReservation({
+            userId: '',
+            serverId: '',
+            reservationStartDate: dayjs(date.getTime()),
+            reservationEndDate: dayjs(date.getTime() + 86400000)
+        });
+    };
 
-  useEffect(() => {
-    getData()
-  }, [])
+    const disableReservedDates = (date) => {
+        const reservations = getSelectedServerReservationInfo(reservation.serverId)
+        for (const res of reservations) {
+            const startDate = new Date(res.reservationStartDate)
+            const endDate = new Date(res.reservationEndDate)
 
-  if (error) {
-    return <div> Error !!!</div>;
-  } else if (!isLoaded) {
-    return <div> Loading... </div>;
-  }
-  else {
-    return (
-      <ThemeProvider theme={getMuiTheme()}>
-        <Button  onClick={() => handleButton()}  variant="outlined" style={{ margin: 8, backgroundColor: "white", color: "black", borderColor: "white", textTransform: 'none' }}><AddCircleOutlineIcon></AddCircleOutlineIcon></Button>
-        <MUIDataTable title="Reservations" columns={columns} data={rows} options={options} />
-      </ThemeProvider>
-    )
-  }
+            if (date >= startDate && date <= endDate) return true
+        }
+
+        return false
+    }
+
+    const getSelectedServerReservationInfo = (serverId) => {
+        const reservations = rows.filter(row => row.serverId === serverId)
+        return reservations
+    }
+
+    const handleReservationStatus = (res) => {
+        const currentDate = new Date();
+        const startDate = new Date(res.reservationStartDate)
+        const endDate = new Date(res.reservationEndDate)
+
+        if (currentDate < startDate) return "Pending"
+        else if (currentDate <= endDate && currentDate >= startDate) return "Active"
+        else return "Close"
+    }
+
+    const validateReservationDate = (res) => {
+        const startDate = new Date(res.reservationStartDate)
+        const endDate = new Date(res.reservationEndDate)
+
+        return startDate <= endDate;
+    }
+
+    const getMuiTheme = () =>
+        createTheme({
+            overrides: {
+                MuiChip: {
+                    root: {
+                        backgroundColor: 'grey'
+                    }
+                }
+            }
+        });
+
+    const columns = AdminReservationsConfig.AdminReservationColumns;
+
+    const options = {
+        filterType: 'checkbox',
+        onRowSelectionChange: (currentSelect, allSelected) => {
+            const result = allSelected.map((item) => {
+                return rows.at(item.index);
+            });
+            const selectedIds = result.map((item) => {
+                return item.id;
+            });
+            setSelectedIdList(selectedIds);
+        },
+        onRowsDelete: ()=>{handleDeleteReservations()},
+    };
+
+    const getReservationsData = () => {
+        const serviceCaller = new ServiceCaller();
+        ReservationService.getReservations(serviceCaller, '')
+            .then((res) => {
+                setIsLoaded(true);
+                setRows(res.data.map(row => row = {...row, status: handleReservationStatus(row)}));
+            })
+            .catch((error) => {
+                console.log(error);
+                setIsLoaded(true);
+                setError(error);
+            });
+    };
+
+    const getServersData = () => {
+        const serviceCaller = new ServiceCaller();
+        ServerService.getServers(serviceCaller, '')
+            .then((result) => {
+                setIsLoaded(true);
+                setServers(result.data);
+            })
+            .catch((err) => {
+                console.log(err);
+                setIsLoaded(true);
+                setError(err);
+            });
+    };
+
+    const handleCreateReservation = () => {
+        if (!validateReservationDate(reservation)) {
+            toast.error('Reservation start date cannot be greater than end date.', { autoClose: 1000 });
+            return;
+        }
+        
+        const serviceCaller = new ServiceCaller();
+        const requestBody = {
+            ...reservation,
+            userId: parseInt(sessionStorage.getItem('userId'))
+        };
+
+        ReservationService.addReservation(serviceCaller, requestBody)
+            .then((result) => {
+                toast.success('Reservation Successfully Created', { autoClose: 1000 });
+                handleCreateClose();
+                getReservationsData();
+            })
+            .catch((err) => {
+                console.log(err);
+                toast.error('Error while updating user', { autoClose: 1000 });
+            });
+    };
+
+    const handleDeleteReservations = () => {
+        const serviceCaller = new ServiceCaller();
+        const requestBody = {ids: selectedIdList}
+
+        ReservationService.deleteReservations(serviceCaller, requestBody).then((result) => {
+            if (result.data.status === "SUCCESS") toast.success(result.data.message, { autoClose: 1000 });
+            else if (result.data.status === "FAIL") toast.error(result.data.message, { autoClose: 1000 });
+            else toast.error("Something went wrong!", { autoClose: 1000 });
+            getReservationsData();
+        }).catch((err) => {
+            console.log(err);
+            toast.error('Error while updating user', { autoClose: 1000 });
+        });
+    }
+
+    useEffect(() => {
+        getReservationsData();
+        getServersData();
+    }, []);
+    
+    if (error) {
+        return <div> Error !!!</div>;
+    } else if (!isLoaded) {
+        return <div> Loading... </div>;
+    } else {
+        return (
+            <ThemeProvider theme={getMuiTheme()}>
+                <Button
+                    onClick={handleCreateOpen}
+                    variant="outlined"
+                    style={{ margin: 8, backgroundColor: 'white', color: 'black', borderColor: 'white', textTransform: 'none' }}
+                >
+                    <AddCircleOutlineIcon></AddCircleOutlineIcon>
+                </Button>
+                <MUIDataTable title="Reservations" columns={columns} data={rows} options={options} />
+
+                <div>
+                    <Modal
+                        open={createOpen}
+                        onClose={handleCreateClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={AdminReservationsConfig.style}>
+                            <Card sx={{ margin: 2, maxWidth: 500 }}>
+                                <CardHeader align="center" title="Create New Reservation" />
+                                <CardContent align="center">
+                                    <div>
+                                        <FormControl sx={{ mt: 2, minWidth: 230 }}>
+                                            <InputLabel id="demo-simple-select-helper-label">Server</InputLabel>
+                                            <Select
+                                                name="serverId"
+                                                labelId="demo-simple-select-helper-label"
+                                                id="demo-simple-select-helper"
+                                                value={reservation.serverId}
+                                                label="Server"
+                                                onChange={(e) => onInputChange(e)}
+                                            >
+                                                {servers.map((server) => (
+                                                    <MenuItem key={server.id} value={server.id}>
+                                                        {' '}
+                                                        {server.serverName}{' '}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+
+                                    <div>
+                                        <Box sx={{ mt: 2, minWidth: 230 }}>
+                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                <DatePicker
+                                                    disabled={reservation.serverId === '' ? true : false}
+                                                    label="Reservation Start Date"
+                                                    name="reservationStartDate"
+                                                    value={reservation.reservationStartDate}
+                                                    onChange={(date) => {
+                                                        setReservation({
+                                                            ...reservation,
+                                                            reservationStartDate: dayjs(date.toDate().getTime())
+                                                        });
+                                                    }}
+                                                    disablePast={true}
+                                                    shouldDisableDate={date => disableReservedDates(date.toDate())}
+                                                />
+                                            </LocalizationProvider>
+                                        </Box>
+
+                                        <Box sx={{ mt: 2, minWidth: 230 }}>
+                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                <DatePicker
+                                                    disabled={reservation.serverId === '' ? true : false}
+                                                    label="Reservation End Date"
+                                                    name="reservationEndDate"
+                                                    value={reservation.reservationEndDate}
+                                                    onChange={(date) => {
+                                                        setReservation({
+                                                            ...reservation,
+                                                            reservationEndDate: dayjs(date.toDate().getTime())
+                                                        });
+                                                    }}
+                                                    disablePast={true}
+                                                    shouldDisableDate={date => disableReservedDates(date.toDate())}
+                                                />
+                                            </LocalizationProvider>
+                                        </Box>
+                                    </div>
+
+                                    <div>
+                                        <Button
+                                            variant="outlined"
+                                            style={{ marginTop: 15, maxWidth: 120, minWidth: 120 }}
+                                            onClick={() => handleCreateReservation()}
+                                        >
+                                            Create
+                                        </Button>
+                                    </div>
+
+                                    <Typography variant="body2" color="text.secondary" align="left"></Typography>
+                                </CardContent>
+                                <CardActions disableSpacing></CardActions>
+                            </Card>
+                        </Box>
+                    </Modal>
+                </div>
+            </ThemeProvider>
+        );
+    }
 }
 
 export default ReservationSettings;

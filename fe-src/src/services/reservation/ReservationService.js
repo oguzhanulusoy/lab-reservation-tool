@@ -2,21 +2,21 @@ class ReservationService {
     async getReservations(serviceCaller, queryParams) {
         return await serviceCaller.get("/reservations", queryParams, undefined)
     }
-/*     addReservation(serviceCaller, requestBody,callback,errorCallBack){
-    let headers= { 'Content-Type': 'application/json'};
-        serviceCaller.post(mainUrl + "/reservations/add", undefined, headers, requestBody, callback, errorCallBack)
-    } */
-    // getReservations(serviceCaller, queryParams, callback,errorCallBack){
-    //     serviceCaller.get(mainUrl+"/reservations", queryParams, undefined  ,  callback, errorCallBack)
-    // }
-/*     updateReservation(serviceCaller, requestBody,callback,errorCallBack){
-        let headers= { 'Content-Type': 'application/json'};
-        serviceCaller.update(mainUrl + "/reservations", undefined, headers, requestBody, callback, errorCallBack)
-    }*/
-    /*deleteReservation(serviceCaller, requestBody, callback,errorCallBack){
-        let headers = {'Accept': 'application/json','Content-Type': 'application/json'};
-        serviceCaller.delete(mainUrl + "/reservations", undefined, headers  , requestBody, callback, errorCallBack)
-    } */
+
+    async addReservation(serviceCaller, requestBody) {
+        const headers = { 'Content-Type': 'application/json' }
+        return await serviceCaller.post('/reservations', undefined, headers, requestBody)
+    }
+
+    async updateReservation(serviceCaller, requestBody, reservationId) {
+        const headers = { 'Content-Type': 'application/json' }
+        return await serviceCaller.update(`/reservations/${reservationId}`, undefined, headers, requestBody)
+    }
+
+    async deleteReservations(serviceCaller, requestBody) {
+        const headers = { 'Content-Type': 'application/json' }
+        return await serviceCaller.delete('/reservations', undefined, headers, requestBody)
+    }
 }
 
 export default new ReservationService();

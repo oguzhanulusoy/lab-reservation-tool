@@ -9,7 +9,6 @@ import AdminLayout from 'layout/AdminLayout';
 const Reservations = Loadable(lazy(() => import('views/admin/reservations')));
 const Servers = Loadable(lazy(() => import('views/admin/servers')));
 const UsersPage = Loadable(lazy(() => import('views/admin/users')));
-const NewReservationPage = Loadable(lazy(() => import('views/admin/newReservationPage')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
@@ -28,10 +27,6 @@ const AuthenticationRoutes = {
         {
             path: '/admin/users',
             element: <UsersPage />
-        },
-        {
-            path: '/admin/newReservation',
-            element: <NewReservationPage />
         }
     ]
 };

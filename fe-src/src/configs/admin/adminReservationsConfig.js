@@ -2,6 +2,18 @@ import { Button } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 
 export default {
+    style: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 500,
+        bgcolor: 'background.paper',
+        border: '2px solid #FFFFFF',
+        boxShadow: 24,
+        p: 2,
+    },
+    
     AdminReservationColumns: [
         {
             name: "firstName",
@@ -38,6 +50,14 @@ export default {
         {
             name: "reservationEndDate",
             label: "Reservation End Date",
+            options: {
+                filter: true,
+                sort: true
+            }
+        },
+        {
+            name: "status",
+            label: "Status",
             options: {
                 filter: true,
                 sort: true

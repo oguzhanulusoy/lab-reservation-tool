@@ -5,10 +5,12 @@ import lombok.Data;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.sql.Date;
+import lombok.experimental.FieldDefaults;
+import lombok.AccessLevel;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReservationCreateRequest {
-    Long id;
     Long userId;
     Long serverId;
 

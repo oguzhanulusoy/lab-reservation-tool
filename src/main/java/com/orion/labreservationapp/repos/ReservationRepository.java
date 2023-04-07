@@ -8,8 +8,9 @@ import java.util.List;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation,Long> {
+    List<Reservation> findByUserIdAndIsDeleted(Long userId, Boolean isDeleted);
 
-    List<Reservation> findByUserId(Long userId);
+    List<Reservation> findByIsDeleted(Boolean isDeleted);
     
     boolean existsByServerId(Long zoneId);
 }

@@ -3,16 +3,19 @@ package com.orion.labreservationapp.entity;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import lombok.experimental.FieldDefaults;
+import lombok.AccessLevel;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "reservations")
 @Data
+@Entity
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "reservations")
 public class Reservation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
@@ -24,10 +27,12 @@ public class Reservation {
     @JoinColumn(name = "server_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     Server server;
-
+    
     @Temporal(TemporalType.DATE)
     Date reservationStartDate;
-
+    
     @Temporal(TemporalType.DATE)
     Date reservationEndDate;
+    
+    Boolean isDeleted;
 }

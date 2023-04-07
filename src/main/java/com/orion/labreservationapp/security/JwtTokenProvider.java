@@ -3,6 +3,8 @@ package com.orion.labreservationapp.security;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -18,14 +20,19 @@ public class JwtTokenProvider {
 
     public String generateJwtToken(Authentication auth) {
         JwtUserDetails userDetails = (JwtUserDetails) auth.getPrincipal();
-        Date expiredDate = new Date(new Date().getTime() + EXPIRES_IN);
-        return Jwts.builder().setSubject(Long.toString(userDetails.getId())).setIssuedAt(new Date())
-                .setExpiration(expiredDate).signWith(SignatureAlgorithm.HS512,APP_SECRET).compact();
+        Date expiredDate = new Date(System.currentTimeMillis()+ EXPIRES_IN);
+        return Jwts.builder()
+            .claim("userId", userDetails.getId())
+            .claim("email", userDetails.getEmail())
+            .claim("username", userDetails.getUsername())
+            .claim("role", userDetails.getUserRole())
+            .setIssuedAt(new Date()).setExpiration(expiredDate)
+            .signWith(SignatureAlgorithm.HS512, APP_SECRET).compact();
     }
 
-    Long getUserIdFromJwt(String token) {
+    public Long getUserIdFromJwt(String token) {
         Claims claims = Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(token).getBody();
-        return Long.parseLong(claims.getSubject());
+        return claims.get("userId", Long.class);
     }
 
     boolean validateToken(String token) {
@@ -43,6 +50,22 @@ public class JwtTokenProvider {
         } catch (IllegalArgumentException e) {
             return false;
         }
+    }
+
+    public GrantedAuthority getRoleFromToken(String token) {
+        Claims claims = Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(token).getBody();
+        GrantedAuthority role = null;
+
+        String userRole = claims.get("role", String.class);
+        Boolean isAdmin = userRole.equals("SUPER_USER");
+
+        if (isAdmin != null && isAdmin) {
+            role = new SimpleGrantedAuthority("SUPER_USER");
+        } else {
+            role = new SimpleGrantedAuthority("USER");
+        }
+        
+        return role;
     }
 
     private boolean isTokenExpired(String token) {

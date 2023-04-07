@@ -6,7 +6,6 @@ import Loadable from 'ui-component/Loadable';
 
 const Reservations = Loadable(lazy(() => import('views/user/reservations')));
 const Servers = Loadable(lazy(() => import('views/user/servers')));
-const NewReservationPage = Loadable(lazy(() => import('views/user/newReservationPage')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -20,10 +19,6 @@ const MainRoutes = {
         {
             path: '/user/servers',
             element: <Servers />
-        },
-        {
-            path: '/user/newReservation',
-            element: <NewReservationPage />
         }
     ]
 };
