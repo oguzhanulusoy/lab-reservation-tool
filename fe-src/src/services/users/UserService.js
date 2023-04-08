@@ -7,6 +7,10 @@ class UserService {
         const headers = { 'Content-Type': 'application/json' }
         return await serviceCaller.update(`/user/${userId}`, undefined, headers, requestBody)
     }
+
+    async getUserById(serviceCaller, userId) {
+        return await serviceCaller.get(`/user/${userId}`, '', undefined)
+    }
 }
 
 export default new UserService();
