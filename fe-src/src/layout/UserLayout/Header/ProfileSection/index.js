@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useRef, useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +31,8 @@ import Transitions from 'ui-component/extended/Transitions';
 
 // assets
 import { IconLogout, IconSettings } from '@tabler/icons';
+import ServiceCaller from 'services/ServiceCaller';
+import UserService from 'services/users/UserService';
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -38,16 +41,21 @@ const ProfileSection = () => {
     const customization = useSelector((state) => state.customization);
     const navigate = useNavigate();
 
-    //const [sdm, setSdm] = useState(true);
-    const [value, setValue] = useState('');
-    const [notification, setNotification] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [open, setOpen] = useState(false);
+    const [user, setUser] = useState({
+        username: '',
+        firstName: '',
+        lastName: '',
+        role: ''
+    })
     /**
      * anchorRef is used on different componets and specifying one type leads to other components throwing an error
      * */
     const anchorRef = useRef(null);
     const handleLogout = async () => {
+        localStorage.clear()
+        sessionStorage.clear()
         navigate('/');
     };
 
@@ -66,17 +74,41 @@ const ProfileSection = () => {
             navigate(route);
         }
     };
+
+    const getUser = () => {
+        const serviceCaller = new ServiceCaller();
+        const userId = sessionStorage.getItem("userId")
+
+        UserService.getUserById(serviceCaller, userId).then((result) => {
+            if (result.status === 200) {
+                setUser({
+                    username: result.data.username,
+                    firstName: result.data.firstName,
+                    lastName: result.data.lastName,
+                    role: result.data.roleId.roleName
+                })
+            } else {
+                handleLogout()
+            }
+        }).catch(err => {
+            handleLogout()
+        })
+    }
+
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
     };
 
     const prevOpen = useRef(open);
+
     useEffect(() => {
         if (prevOpen.current === true && open === false) {
             anchorRef.current.focus();
         }
 
         prevOpen.current = open;
+
+        getUser()
     }, [open]);
 
     return (
@@ -138,10 +170,10 @@ const ProfileSection = () => {
                                             <Stack direction="row" spacing={0.5} alignItems="center">
                                                 <Typography variant="h4">Good Morning,</Typography>
                                                 <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                                                    Furkan Civan
+                                                    {user.firstName} {user.lastName}
                                                 </Typography>
                                             </Stack>
-                                            <Typography variant="subtitle2">Project Admin</Typography>
+                                            <Typography variant="subtitle2">{user.role === "SUPER_USER" ? "Super User" : "User"}</Typography>
                                         </Stack>
                                     </Box>
                                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
@@ -149,7 +181,6 @@ const ProfileSection = () => {
                                             <Card
                                                 sx={{
                                                     bgcolor: theme.palette.primary.light,
-                                                    my: 2
                                                 }}
                                             >
                                             </Card>
@@ -173,7 +204,7 @@ const ProfileSection = () => {
                                                 <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 0}
-                                                    onClick={(event) => handleListItemClick(event, 0, '/user/account-profile/profile1')}
+                                                    onClick={(event) => handleListItemClick(event, 0, '/user/settings')}
                                                 >
                                                     <ListItemIcon>
                                                         <IconSettings stroke={1.5} size="1.3rem" />

@@ -107,7 +107,6 @@ function ReservationSettings() {
 
     const getSelectedServerReservationInfo = (serverId, userId) => {
         const reservations = rows.filter(row => row.serverId === serverId && row.userId !== userId)
-        console.log(reservations)
         return reservations
     }
 
