@@ -59,9 +59,13 @@ public class ReservationService {
 
     public Reservation updateOneReservationById(Long reservationId, ReservationUpdateRequest updateReservation) {
         Optional<Reservation> reservation = reservationRepository.findById(reservationId);
-        if (reservation.isPresent())
-        {
+        Server server = serverService.getOneServerById(updateReservation.getServerId());
+        if(server == null)
+            return null;
+
+        if (reservation.isPresent()) {
             Reservation toUpdate = reservation.get();
+            toUpdate.setServer(server);
             toUpdate.setReservationStartDate((Date) updateReservation.getReservationStartDate());
             toUpdate.setReservationEndDate((Date) updateReservation.getReservationEndDate());
             reservationRepository.save(toUpdate);
