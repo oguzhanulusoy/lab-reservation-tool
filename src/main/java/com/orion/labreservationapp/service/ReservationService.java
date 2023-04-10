@@ -57,8 +57,11 @@ public class ReservationService {
         return reservationRepository.save(toSave);
     }
 
-    public Reservation updateOneReservationById(Long reservationId, ReservationUpdateRequest updateReservation) {
+    public Reservation updateOneReservationById(Long reservationId, ReservationUpdateRequest updateReservation, Boolean isAdmin, Long userId) {
         Optional<Reservation> reservation = reservationRepository.findById(reservationId);
+        if (!isAdmin && reservation.get().getUser().getId() != userId)
+            return null;
+
         Server server = serverService.getOneServerById(updateReservation.getServerId());
         if(server == null)
             return null;
@@ -71,6 +74,7 @@ public class ReservationService {
             reservationRepository.save(toUpdate);
             return toUpdate;
         }
+
         return null;
     }
 

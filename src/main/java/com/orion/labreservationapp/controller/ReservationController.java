@@ -44,16 +44,19 @@ public class ReservationController {
     }
 
     @PutMapping("/{reservationId}")
-    public Reservation updateOneReservation(@PathVariable Long reservationId,
+    public Reservation updateOneReservation(@RequestHeader Map<String, String> headers,
+                                            @PathVariable Long reservationId,
                                             @RequestBody ReservationUpdateRequest updateReservation) {
-        return reservationService.updateOneReservationById(reservationId,updateReservation);
+        GrantedAuthority userRole = jwtTokenProvider.getRoleFromToken(headers.get("authorization").substring(7));
+        Long userId = jwtTokenProvider.getUserIdFromJwt(headers.get("authorization").substring(7));
+        return reservationService.updateOneReservationById(reservationId,updateReservation, userRole.getAuthority().equals("SUPER_USER"), userId);
     }
 
     @DeleteMapping
     public ResponseEntity<ReservationDeleteResponse> deleteReservations(@RequestHeader Map<String, String> headers, @RequestBody IdWrapper ids) {
         GrantedAuthority userRole = jwtTokenProvider.getRoleFromToken(headers.get("authorization").substring(7));
         Long userId = jwtTokenProvider.getUserIdFromJwt(headers.get("authorization").substring(7));
-        ReservationDeleteResponse result = reservationService.deleteReservationById(ids, userRole.equals("SUPER_USER"), userId);
+        ReservationDeleteResponse result = reservationService.deleteReservationById(ids, userRole.getAuthority().equals("SUPER_USER"), userId);
 
         return ResponseEntity.ok(result);
     }

@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,6 +29,7 @@ public class ServerController {
         return serverService.getAllService();
     }
 
+    @PreAuthorize("hasAuthority('SUPER_USER')")
     @PostMapping
     public ResponseEntity<ServerResponse> crateServer(@Valid @RequestBody ServerCreateRequest newServerRequest){
         ServerResponse serverResponse = new ServerResponse();
@@ -53,15 +55,16 @@ public class ServerController {
 
     @GetMapping("/{serverId}")
     public Server getOneServerById(@PathVariable Long serverId){
-        //custom exception
         return serverService.getOneServerById(serverId);
     }
 
+    @PreAuthorize("hasAuthority('SUPER_USER')")
     @PutMapping("/{serverId}")
     public Server updateOneServer(@PathVariable Long serverId,@RequestBody Server newServer){
         return serverService.updateOneServer(serverId,newServer);
     }
     
+    @PreAuthorize("hasAuthority('SUPER_USER')")
     @DeleteMapping
     public ResponseEntity<ServerDeleteResponse> deleteServer(@RequestBody IdWrapper ids) {
         ServerDeleteResponse result = serverService.deleteServersByIds(ids);
