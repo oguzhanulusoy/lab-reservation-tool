@@ -14,7 +14,8 @@ import {
     CardHeader,
     CardContent,
     CardActions,
-    Typography
+    Typography,
+    TextField
 } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -45,7 +46,8 @@ function ReservationSettings() {
         userId: '',
         serverId: '',
         reservationStartDate: dayjs(date.getTime()),
-        reservationEndDate: dayjs(date.getTime() + 86400000)
+        reservationEndDate: dayjs(date.getTime() + 86400000),
+        description: ''
     });
 
     const onInputChange = (e) => {
@@ -61,9 +63,10 @@ function ReservationSettings() {
             userId: '',
             serverId: '',
             reservationStartDate: dayjs(date.getTime()),
-            reservationEndDate: dayjs(date.getTime() + 86400000)
+            reservationEndDate: dayjs(date.getTime() + 86400000),
+            description: ''
         });
-    };
+    }
 
     const handleCreateClose = () => {
         setCreateOpen(false);
@@ -93,8 +96,9 @@ function ReservationSettings() {
             userId: row[0].userId,
             serverId: row[0].serverId,
             reservationStartDate: dayjs(startDate.getTime()),
-            reservationEndDate: dayjs(endDate.getTime())
-        });
+            reservationEndDate: dayjs(endDate.getTime()),
+            description: row[0].description
+        })
     };
 
     const disableReservedDates = (date) => {
@@ -305,7 +309,7 @@ function ReservationSettings() {
                     >
                         <Box sx={UserReservationsConfig.style}>
                             <Card sx={{ margin: 2, maxWidth: 500 }}>
-                                <CardHeader align="center" title="Create New Reservation" />
+                                <CardHeader align="center" title="New Reservation" />
                                 <CardContent align="center">
                                     <div>
                                         <FormControl sx={{ mt: 2, minWidth: 230 }}>
@@ -366,6 +370,19 @@ function ReservationSettings() {
                                                 />
                                             </LocalizationProvider>
                                         </Box>
+                                    </div>
+
+                                    <div>
+                                        <TextField
+                                            name="description"
+                                            id="outlined-basic"
+                                            label="Server Description"
+                                            variant="outlined"
+                                            value={reservation.description}
+                                            onChange={(i) => onInputChange(i)}
+                                            sx={{ mt: 2, minWidth: 230 }}
+                                            multiline
+                                        />
                                     </div>
 
                                     <div>
@@ -395,7 +412,7 @@ function ReservationSettings() {
                     >
                         <Box sx={UserReservationsConfig.style}>
                             <Card sx={{ margin: 2, maxWidth: 500 }}>
-                                <CardHeader align="center" title="Create New Reservation" />
+                                <CardHeader align="center" title="Update Reservation" />
                                 <CardContent align="center">
                                     <div>
                                         <FormControl sx={{ mt: 2, minWidth: 230 }}>
@@ -456,6 +473,19 @@ function ReservationSettings() {
                                                 />
                                             </LocalizationProvider>
                                         </Box>
+                                    </div>
+
+                                    <div>
+                                        <TextField
+                                            name="description"
+                                            id="outlined-basic"
+                                            label="Server Description"
+                                            variant="outlined"
+                                            value={reservation.description}
+                                            onChange={(i) => onInputChange(i)}
+                                            sx={{ mt: 2, minWidth: 230 }}
+                                            multiline
+                                        />
                                     </div>
 
                                     <div>

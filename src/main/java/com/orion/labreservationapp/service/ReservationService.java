@@ -54,6 +54,7 @@ public class ReservationService {
         toSave.setReservationStartDate(newReservationRequest.getReservationStartDate());
         toSave.setReservationEndDate(newReservationRequest.getReservationEndDate());
         toSave.setIsDeleted(false);
+        toSave.setDescription(newReservationRequest.getDescription());
         return reservationRepository.save(toSave);
     }
 
@@ -71,6 +72,7 @@ public class ReservationService {
             toUpdate.setServer(server);
             toUpdate.setReservationStartDate((Date) updateReservation.getReservationStartDate());
             toUpdate.setReservationEndDate((Date) updateReservation.getReservationEndDate());
+            toUpdate.setDescription(updateReservation.getDescription());
             reservationRepository.save(toUpdate);
             return toUpdate;
         }

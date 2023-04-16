@@ -35,15 +35,8 @@ import ServiceCaller from 'services/ServiceCaller';
 const Login = ({ ...others }) => {
     let navigate = useNavigate();
     const theme = useTheme();
-    const scriptedRef = useScriptRef();
     const [checked, setChecked] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
-    // const [store, setStore] = useState({
-    //     tokenKey: '',
-    //     currentUser: '',
-    //     refreshToken: '',
-    //     roleName: ''
-    // });
 
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
@@ -165,9 +158,6 @@ const Login = ({ ...others }) => {
                                 }
                                 label="Remember me"
                             />
-                            <Typography variant="subtitle1" color="#6F6E6E" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
-                                Forgot Password?
-                            </Typography>
                         </Stack>
                         {errors.submit && (
                             <Box sx={{ mt: 3 }}>

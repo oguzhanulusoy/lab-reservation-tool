@@ -18,4 +18,6 @@ public class ReservationUpdateRequest {
 
     @Temporal(TemporalType.DATE)
     Date reservationEndDate;
+
+    String description;
 }

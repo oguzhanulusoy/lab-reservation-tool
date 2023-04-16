@@ -35,4 +35,6 @@ public class Reservation {
     Date reservationEndDate;
     
     Boolean isDeleted;
+
+    String description;
 }

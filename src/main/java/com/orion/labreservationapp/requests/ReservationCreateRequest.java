@@ -19,4 +19,6 @@ public class ReservationCreateRequest {
 
     @Temporal(TemporalType.DATE)
     Date reservationEndDate;
+
+    String description;
 }
