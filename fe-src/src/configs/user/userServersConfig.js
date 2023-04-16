@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
+import { Book } from "@mui/icons-material";
 
 export default {
     style: {
@@ -59,6 +59,19 @@ export default {
             options: {
                 filter: true,
                 sort: true
+            }
+        },
+        {
+            name: "bookNow",
+            label: "Book Now",
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRenderLite: (dataIndex) => {
+                    return (
+                        <Button aria-label="edit" onClick={()=>{}}><Book style={{color:"#9e9e9e"}}></Book></Button>
+                    );
+                }
             }
         }
     ]
