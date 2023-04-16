@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
+import Visibility from "@mui/icons-material/Visibility";
 
 export default {
     style: {
@@ -16,16 +17,8 @@ export default {
     
     AdminReservationColumns: [
         {
-            name: "firstName",
-            label: "First Name",
-            options: {
-                filter: true,
-                sort: true
-            }
-        },
-        {
-            name: "lastName",
-            label: "Last Name",
+            name: 'name',
+            label: 'Full Name',
             options: {
                 filter: true,
                 sort: true
@@ -72,6 +65,19 @@ export default {
                 customBodyRenderLite: (dataIndex) => {
                     return (
                         <Button aria-label="edit" onClick={() => { }}><EditIcon style={{ color: "#9e9e9e" }}></EditIcon></Button>
+                    );
+                }
+            }
+        },
+        {
+            name: "showDescription",
+            label: "Show Description",
+            options: {
+                filter: false,
+                sort: false,
+                customBodyRenderLite: (dataIndex) => {
+                    return (
+                        <Button aria-label="edit" onClick={() => { }}><Visibility style={{ color: "#9e9e9e" }}></Visibility></Button>
                     );
                 }
             }

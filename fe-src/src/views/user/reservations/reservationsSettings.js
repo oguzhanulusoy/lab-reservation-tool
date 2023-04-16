@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
+import Visibility from "@mui/icons-material/Visibility";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -148,7 +149,7 @@ function ReservationSettings() {
         });
 
     const columns = UserReservationsConfig.UserReservationColumns;
-    columns[columns.length - 1].options.customBodyRenderLite = (dataIndex) => {
+    columns[columns.length - 2].options.customBodyRenderLite = (dataIndex) => {
         return (
             <Button
                 aria-label="edit"
@@ -162,6 +163,17 @@ function ReservationSettings() {
             </Button>
         );
     };
+
+    columns[columns.length - 1].options.customBodyRenderLite = (dataIndex) => {
+        return (
+            <Button aria-label="edit" onClick={() => { showDescription(rows[dataIndex].id) }}><Visibility style={{ color: "#9e9e9e" }}></Visibility></Button>
+        );
+    }
+
+    const showDescription = (id) => {
+        const row = rows.filter(row => row.id === id)
+        toast.info(row[0].description, { autoClose: 3000 })
+    }
 
     const options = {
         filterType: 'checkbox',
@@ -184,7 +196,7 @@ function ReservationSettings() {
         ReservationService.getReservations(serviceCaller, '')
             .then((res) => {
                 setIsLoaded(true);
-                setRows(res.data.map((row) => (row = { ...row, status: handleReservationStatus(row) })));
+                setRows(res.data.map((row) => (row = { ...row, status: handleReservationStatus(row), name: row.firstName + " " + row.lastName })));
             })
             .catch((error) => {
                 console.log(error);
