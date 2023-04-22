@@ -3,6 +3,9 @@ package com.orion.labreservationapp.service;
 import com.orion.labreservationapp.entity.Reservation;
 import com.orion.labreservationapp.entity.Server;
 import com.orion.labreservationapp.entity.User;
+import com.orion.labreservationapp.mail.CreateMail;
+import com.orion.labreservationapp.mail.DeleteMail;
+import com.orion.labreservationapp.mail.UpdateMail;
 import com.orion.labreservationapp.repos.ReservationRepository;
 import com.orion.labreservationapp.requests.ReservationCreateRequest;
 import com.orion.labreservationapp.requests.ReservationUpdateRequest;
@@ -12,6 +15,7 @@ import com.orion.labreservationapp.utils.IdWrapper;
 
 import lombok.AllArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -28,6 +32,13 @@ public class ReservationService {
     private ReservationRepository reservationRepository;
     private UserService userService;
     private ServerService serverService;
+    
+    @Autowired
+    private CreateMail createMail;
+    @Autowired
+    private UpdateMail updateMail;
+    @Autowired
+    private DeleteMail deleteMail;
 
     public List<ReservationResponse> getAllReservations(Optional<Long> userId) {
         List<Reservation> list;
@@ -55,7 +66,15 @@ public class ReservationService {
         toSave.setReservationEndDate(newReservationRequest.getReservationEndDate());
         toSave.setIsDeleted(false);
         toSave.setDescription(newReservationRequest.getDescription());
-        return reservationRepository.save(toSave);
+
+        Reservation result = reservationRepository.save(toSave);
+
+        if (result != null) {
+            createMail.send(result.getUser().getEmail(), server.getServerName(), newReservationRequest.getDescription(),
+            newReservationRequest.getReservationStartDate(), newReservationRequest.getReservationEndDate());
+        }
+
+        return result;
     }
 
     public Reservation updateOneReservationById(Long reservationId, ReservationUpdateRequest updateReservation, Boolean isAdmin, Long userId) {
@@ -73,8 +92,14 @@ public class ReservationService {
             toUpdate.setReservationStartDate((Date) updateReservation.getReservationStartDate());
             toUpdate.setReservationEndDate((Date) updateReservation.getReservationEndDate());
             toUpdate.setDescription(updateReservation.getDescription());
-            reservationRepository.save(toUpdate);
-            return toUpdate;
+            Reservation result = reservationRepository.save(toUpdate);
+
+            if (result != null) {
+                updateMail.send(result.getUser().getEmail(), server.getServerName(), updateReservation.getDescription(), 
+                (Date) updateReservation.getReservationStartDate(), (Date) updateReservation.getReservationEndDate());
+            }
+
+            return result;
         }
 
         return null;
@@ -101,6 +126,9 @@ public class ReservationService {
             Reservation reservation = getOneReservationById(id);
             reservation.setIsDeleted(isDeleted);
             reservationRepository.save(reservation);
+
+            deleteMail.send(reservation.getUser().getEmail(), reservation.getServer().getServerName(), reservation.getDescription(),
+            (Date) reservation.getReservationStartDate(), (Date) reservation.getReservationEndDate());
         }
 
         response.setMessage("Reservations deleted successfully");
