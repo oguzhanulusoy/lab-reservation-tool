@@ -105,11 +105,18 @@ function ReservationSettings() {
     const disableReservedDates = (date) => {
         const userId = parseInt(sessionStorage.getItem('userId'));
         const reservations = getSelectedServerReservationInfo(reservation.serverId, userId);
+        const formattedDate = new Date(date);
+        
         for (const res of reservations) {
             const startDate = new Date(res.reservationStartDate);
             const endDate = new Date(res.reservationEndDate);
 
-            if (date >= startDate && date <= endDate) return true;
+            startDate.setHours(formattedDate.getHours());
+            startDate.setMinutes(formattedDate.getMinutes());
+            startDate.setSeconds(formattedDate.getSeconds());
+            startDate.setMilliseconds(formattedDate.getMilliseconds());
+
+            if (formattedDate >= startDate && formattedDate <= endDate) return true;
         }
 
         return false;
