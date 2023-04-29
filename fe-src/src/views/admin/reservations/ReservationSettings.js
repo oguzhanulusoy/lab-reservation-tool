@@ -164,7 +164,11 @@ function ReservationSettings() {
 
     const showDescription = (id) => {
         const row = rows.filter(row => row.id === id);
-        toast.info(row[0].description, { autoClose: 3000 })
+        const startDate = new Date(row[0].reservationStartDate).getTime()
+        const endDate = new Date(row[0].reservationEndDate).getTime()
+        const difference = endDate - startDate
+        const totalDays = Math.ceil(difference / (1000 * 3600 * 24))
+        toast.info(`Description: ${row[0].description} Total Day: ${totalDays}`, { autoClose: 3000 })
     }
 
     const options = {
@@ -364,7 +368,7 @@ function ReservationSettings() {
                                         <TextField
                                             name="description"
                                             id="outlined-basic"
-                                            label="Server Description"
+                                            label="Description"
                                             variant="outlined"
                                             value={reservation.description}
                                             onChange={(i) => onInputChange(i)}
@@ -467,7 +471,7 @@ function ReservationSettings() {
                                         <TextField
                                             name="description"
                                             id="outlined-basic"
-                                            label="Server Description"
+                                            label="Description"
                                             variant="outlined"
                                             value={reservation.description}
                                             onChange={(i) => onInputChange(i)}

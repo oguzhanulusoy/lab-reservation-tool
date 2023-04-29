@@ -271,7 +271,7 @@ function ServerSettings() {
                                         <TextField
                                             name="description"
                                             id="outlined-basic"
-                                            label="Server Description"
+                                            label="Description"
                                             variant="outlined"
                                             value={reservation.description}
                                             onChange={(i) => onInputChangeReservation(i)}
