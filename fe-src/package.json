@@ -2,7 +2,7 @@
     "name": "berry-material-react-free",
     "version": "3.2.0",
     "private": true,
-    "homepage": "https://example.com/orion",
+    "homepage": "https://example.com",
     "dependencies": {
         "@emotion/cache": "^11.9.3",
         "@emotion/react": "^11.9.3",
@@ -20,7 +20,6 @@
         "dayjs": "^1.11.7",
         "formik": "^2.2.9",
         "framer-motion": "^6.3.16",
-        "http-proxy-middleware": "^1.0.6",
         "material-ui-popup-state": "^4.0.1",
         "mui-datatables": "^4.2.2",
         "prop-types": "^15.8.1",
@@ -85,6 +84,5 @@
         "eslint-plugin-react-hooks": "4.6.0",
         "prettier": "^2.7.1",
         "sass": "^1.53.0"
-    },
-    "proxy": "http://backend:9090"
+    }
 }

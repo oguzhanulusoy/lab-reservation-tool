@@ -1,7 +1,9 @@
+import config from '../config';
+
 class HttpUtil {
     static get(url, params, headers) {
         return new Promise((resolve, reject) => {
-            const completeUrl = url + HttpUtil.getQueryString(params)
+            const completeUrl = config.proxy + url + HttpUtil.getQueryString(params)
             const requestOptions = {
                 method: 'GET',
                 headers: headers
@@ -9,8 +11,8 @@ class HttpUtil {
 
             fetch(completeUrl, requestOptions)
             .then(async response => {
-                if(response.status === 401 && window.location.pathname !== "/orion" && window.location.pathname !== "/login"){
-                    window.location.assign(window.location.origin + "/orion");
+                if(response.status === 401 && window.location.pathname !== "/" && window.location.pathname !== "/login"){
+                    window.location.assign(window.location.origin + "/");
                 }
 
                 const statusCode = response.status;
@@ -29,7 +31,7 @@ class HttpUtil {
     
     static post(url, params, headers, requestBody) {
         return new Promise((resolve, reject) => {
-            let completeUrl = url + HttpUtil.getQueryString(params)
+            let completeUrl = config.proxy + url + HttpUtil.getQueryString(params)
             const requestOptions = {
                 method: 'POST',
                 headers: headers,
@@ -38,8 +40,8 @@ class HttpUtil {
 
             fetch(completeUrl, requestOptions)
             .then(async response => {
-                if(response.status === 401 && window.location.pathname !== "/orion" && window.location.pathname !== "/login"){
-                    window.location.assign(window.location.origin + "/orion");
+                if(response.status === 401 && window.location.pathname !== "/" && window.location.pathname !== "/login"){
+                    window.location.assign(window.location.origin + "/");
                 }
 
                 const statusCode = response.status;
@@ -58,7 +60,7 @@ class HttpUtil {
 
     static update(url, params, headers, requestBody) {
         return new Promise((resolve, reject) => {
-            let completeUrl = url + HttpUtil.getQueryString(params)
+            let completeUrl = config.proxy + url + HttpUtil.getQueryString(params)
             const requestOptions = {
                 method: 'PUT',
                 headers: headers,
@@ -67,8 +69,8 @@ class HttpUtil {
 
             fetch(completeUrl, requestOptions)
             .then(async response => {
-                if(response.status === 401 && window.location.pathname !== "/orion" && window.location.pathname !== "/login"){
-                    window.location.assign(window.location.origin + "/orion");
+                if(response.status === 401 && window.location.pathname !== "/" && window.location.pathname !== "/login"){
+                    window.location.assign(window.location.origin + "/");
                 }
 
                 const statusCode = response.status;
@@ -87,7 +89,7 @@ class HttpUtil {
 
     static delete(url, params, headers, requestBody) {
         return new Promise((resolve, reject) => {
-            let completeUrl = url + HttpUtil.getQueryString(params)
+            let completeUrl = config.proxy + url + HttpUtil.getQueryString(params)
             const requestOptions = {
                 method: 'DELETE',
                 headers: headers,
@@ -96,8 +98,8 @@ class HttpUtil {
 
             fetch(completeUrl, requestOptions)
             .then(async response => {
-                if(response.status === 401 && window.location.pathname !== "/orion" && window.location.pathname !== "/login"){
-                    window.location.assign(window.location.origin + "/orion");
+                if(response.status === 401 && window.location.pathname !== "/" && window.location.pathname !== "/login"){
+                    window.location.assign(window.location.origin + "/");
                 }
 
                 const statusCode = response.status;

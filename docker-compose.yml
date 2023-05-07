@@ -18,7 +18,7 @@ services:
       - db
     build: ./
     ports:
-      - '9090:9090'
+      - '8080:8080'
     environment:
       - POSTGRES_URL=${POSTGRES_URL}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -31,10 +31,11 @@ services:
       - labrez
   frontend:
     depends_on:
+      - db
       - backend
     build: ./fe-src
     ports:
-      - '3000:3000'
+      - '3000:80'
     networks:
       - labrez
 volumes:
